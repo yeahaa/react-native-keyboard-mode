@@ -1,25 +1,11 @@
-import { multiply } from 'react-native-keyboard-mode';
-import { Text, View, StyleSheet } from 'react-native';
-import { useState, useEffect } from 'react';
+import { Button, View } from 'react-native';
+import { setKeyboardMode } from 'react-native-keyboard-mode';
 
 export default function App() {
-  const [result, setResult] = useState<number | undefined>();
-
-  useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
-
   return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
+    <View>
+      <Button title="Pan" onPress={() => setKeyboardMode('pan')} />
+      <Button title="Resize" onPress={() => setKeyboardMode('resize')} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

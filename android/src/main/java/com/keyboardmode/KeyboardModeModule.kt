@@ -15,8 +15,19 @@ class KeyboardModeModule(reactContext: ReactApplicationContext) :
   // Example method
   // See https://reactnative.dev/docs/native-modules-android
   @ReactMethod
-  fun multiply(a: Double, b: Double, promise: Promise) {
-    promise.resolve(a * b)
+  fun setMode(mode: String) {
+    val activity = currentActivity ?: return
+
+    activity.runOnUiThread {
+      when (mode) {
+        "pan" -> activity.window.setSoftInputMode(
+          WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+        )
+        "resize" -> activity.window.setSoftInputMode(
+          WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        )
+      }
+    }
   }
 
   companion object {

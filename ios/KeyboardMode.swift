@@ -1,8 +1,8 @@
 @objc(KeyboardMode)
 class KeyboardMode: NSObject {
 
-  @objc(multiply:withB:withResolver:withRejecter:)
-  func multiply(a: Float, b: Float, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
-    resolve(a*b)
+   @objc
+  func setMode(_ mode: String) {
+    // no-op on iOS
   }
 }
