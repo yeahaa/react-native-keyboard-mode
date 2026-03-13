@@ -12,7 +12,7 @@ npm install react-native-keyboard-mode
 
 
 ```js
-import { multiply } from 'react-native-keyboard-mode';
+import { setKeyboardMode } from 'react-native-keyboard-mode';
 
 // ...
 
