@@ -3,5 +3,9 @@ import { NativeModules } from 'react-native';
 const { KeyboardMode } = NativeModules;
 
 export function setKeyboardMode(mode: 'pan' | 'resize') {
-  KeyboardMode.setMode(mode);
+  if (KeyboardMode?.setMode) {
+    KeyboardMode.setMode(mode);
+  } else {
+    console.warn('KeyboardMode native module not found');
+  }
 }
