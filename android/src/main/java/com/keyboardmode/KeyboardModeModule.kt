@@ -23,33 +23,55 @@ class KeyboardModeModule(private val reactContext: ReactApplicationContext) :
 
       if (mode == "pan") {
 
+        // --- Pan mode ---
         val desiredMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
 
         if (window.attributes.softInputMode != desiredMode) {
           window.setSoftInputMode(desiredMode)
         }
 
-        // Insets listener resetten
+        // Insets listener verwijderen
         ViewCompat.setOnApplyWindowInsetsListener(root, null)
+
+        // Reset padding: behoud alleen top/bottom van system bars
+        val systemBars =
+                ViewCompat.getRootWindowInsets(root)
+                        ?.getInsets(WindowInsetsCompat.Type.systemBars())
+        val topPadding = systemBars?.top ?: 0
+        val bottomPadding = systemBars?.bottom ?: 0
+
+        root.setPadding(0, topPadding, 0, bottomPadding)
+
+        // force apply insets
+        ViewCompat.requestApplyInsets(root)
       } else {
 
+        // --- Resize mode ---
         if (Build.VERSION.SDK_INT >= 30) {
 
-          // Android 11+ moderne aanpak
-          window.setDecorFitsSystemWindows(false)
-
-          // Android zelf niets laten doen
+          // Android ≥ 11: nothing + insets
           window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
 
           ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
             val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
-            view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, imeInsets.bottom)
+            val bottom = maxOf(imeInsets.bottom, systemBars.bottom)
+
+            view.setPadding(
+                    view.paddingLeft,
+                    systemBars.top, // topbar
+                    view.paddingRight,
+                    bottom // keyboard of bottom bar
+            )
 
             insets
           }
+
+          ViewCompat.requestApplyInsets(root)
         } else {
 
+          // Android < 11
           val desiredMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 
           if (window.attributes.softInputMode != desiredMode) {
