@@ -33,17 +33,18 @@ class KeyboardModeModule(private val reactContext: ReactApplicationContext) :
         // Insets listener verwijderen
         ViewCompat.setOnApplyWindowInsetsListener(root, null)
 
-        // Reset padding: behoud alleen top/bottom van system bars
-        val systemBars =
+        // Reset padding: behoud alleen top/bottom van system bars, wordt dubbel geteld??
+       /* val systemBars =
                 ViewCompat.getRootWindowInsets(root)
                         ?.getInsets(WindowInsetsCompat.Type.systemBars())
         val topPadding = systemBars?.top ?: 0
         val bottomPadding = systemBars?.bottom ?: 0
-
-        root.setPadding(0, topPadding, 0, bottomPadding)
+*/
+        root.setPadding(0, 0, 0, 0)
 
         // force apply insets
         ViewCompat.requestApplyInsets(root)
+
       } else {
 
         // --- Resize mode ---
@@ -54,15 +55,15 @@ class KeyboardModeModule(private val reactContext: ReactApplicationContext) :
 
           ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
             val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+           // val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
-            val bottom = maxOf(imeInsets.bottom, systemBars.bottom)
+            //val bottom = maxOf(imeInsets.bottom, systemBars.bottom)
 
             view.setPadding(
                     view.paddingLeft,
-                    systemBars.top, // topbar
+                    imeInsets.top, // topbar
                     view.paddingRight,
-                    bottom // keyboard of bottom bar
+                    imeInsets.bottom // keyboard of bottom bar
             )
 
             insets
